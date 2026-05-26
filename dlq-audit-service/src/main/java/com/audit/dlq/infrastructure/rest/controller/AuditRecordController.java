@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * Adaptador de entrada REST — permite consultar os registros de auditoria
- * persistidos no banco de dados.
- */
 @RestController
 @RequestMapping("/api/v1/audit-records")
 public class AuditRecordController {

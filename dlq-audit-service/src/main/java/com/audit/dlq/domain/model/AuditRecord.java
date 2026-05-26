@@ -4,15 +4,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.UUID;
 
-/**
- * Entidade de domínio pura — sem anotações de framework.
- *
- * O factory method {@code create()} encapsula toda a lógica de criação:
- * - errorId sempre gerado como UUID aleatório
- * - status sempre inicializado como "PENDING_ANALYSIS"
- * - timestamp gerado no instante atual, com fuso de Brasília (America/Sao_Paulo)
- * - severity calculada externamente e injetada aqui
- */
 public class AuditRecord {
 
     private static final ZoneId BRAZIL_ZONE = ZoneId.of("America/Sao_Paulo");
@@ -34,15 +25,6 @@ public class AuditRecord {
         this.severity = severity;
     }
 
-    /**
-     * Factory method que cria um novo registro de auditoria.
-     * O timestamp é capturado no fuso America/Sao_Paulo e convertido para Instant (UTC).
-     *
-     * @param queueName nome fixo da fila de origem ("SQS_QUEUE")
-     * @param payload   conteúdo bruto da mensagem em string
-     * @param severity  severidade calculada pela regra de negócio
-     * @return novo AuditRecord pronto para persistência
-     */
     public static AuditRecord create(String queueName, String payload, ErrorSeverity severity) {
         return new AuditRecord(
                 UUID.randomUUID(),

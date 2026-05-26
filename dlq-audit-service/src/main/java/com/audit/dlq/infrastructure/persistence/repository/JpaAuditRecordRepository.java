@@ -11,13 +11,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * Adaptador de saída (Output Adapter) — implementa a porta {@link AuditRecordRepository}.
- *
- * Faz a ponte entre o domínio e a tecnologia JPA/H2.
- * Trocar para PostgreSQL ou MongoDB exige apenas criar um novo adaptador aqui,
- * sem tocar em nenhuma classe do domínio ou da aplicação.
- */
 @Component
 public class JpaAuditRecordRepository implements AuditRecordRepository {
 

@@ -6,12 +6,6 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
-/**
- * Entidade JPA para persistência no banco de dados.
- *
- * Separada intencionalmente do modelo de domínio (AuditRecord):
- * mudanças no schema do banco nunca afetam o núcleo do hexágono.
- */
 @Entity
 @Table(name = "audit_records")
 public class AuditRecordEntity {

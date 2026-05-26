@@ -12,17 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Caso de uso: auditar uma mensagem proveniente da DLQ.
- *
- * Orquestra o fluxo sem conter regras de negócio:
- *  1. Delega o cálculo de severidade ao SeverityClassifier (domínio)
- *  2. Cria o AuditRecord via factory method (domínio)
- *  3. Persiste via porta de saída (infraestrutura)
- *
- * A anotação @Transactional garante que o commit no banco ocorre
- * ANTES de o listener confirmar (acknowledge) a mensagem na DLQ.
- */
 @Service
 public class ProcessDlqMessageUseCase {
 

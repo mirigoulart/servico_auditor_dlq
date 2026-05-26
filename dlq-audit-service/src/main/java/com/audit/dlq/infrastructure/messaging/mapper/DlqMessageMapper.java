@@ -1,7 +1,6 @@
 package com.audit.dlq.infrastructure.messaging.mapper;
 
 import com.audit.dlq.infrastructure.messaging.dto.OrderEventDTO;
-import com.audit.dlq.infrastructure.messaging.dto.OrderItemDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/**
- * Mapper de infraestrutura de mensageria.
- *
- * Converte o payload bruto da DLQ (String JSON) em estruturas que o
- * caso de uso consegue processar, sem expor detalhes de desserialização
- * ao domínio ou à camada de aplicação.
- */
 @Component
 public class DlqMessageMapper {
 
@@ -32,13 +24,20 @@ public class DlqMessageMapper {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * Extrai a lista de itens do pedido como List<Map<String, Object>>,
-     * formato esperado pelo {@code SeverityClassifier}.
-     *
-     * Se o payload não puder ser interpretado, retorna lista vazia
-     * (severidade será LOW por definição).
-     */
+    public String extractOrigin(String payload) {
+        try {
+            OrderEventDTO event = objectMapper.readValue(payload, OrderEventDTO.class);
+            if (event == null || event.getOrigin() == null || event.getOrigin().isBlank()) {
+                log.warn("Campo 'origin' ausente ou vazio no payload da DLQ. Usando fallback 'UNKNOWN_QUEUE'.");
+                return "UNKNOWN_QUEUE";
+            }
+            return event.getOrigin();
+        } catch (Exception e) {
+            log.warn("Não foi possível extrair o campo 'origin' do payload da DLQ. Usando fallback 'UNKNOWN_QUEUE'.", e);
+            return "UNKNOWN_QUEUE";
+        }
+    }
+
     public List<Map<String, Object>> extractOrderItems(String payload) {
         try {
             OrderEventDTO event = objectMapper.readValue(payload, OrderEventDTO.class);
